@@ -1,0 +1,8 @@
+{
+  "item.iobtrack.night_fury_tracker": "Night Fury Tracker",
+  "dragon.night_fury": "Night Fury",
+  "item.iobtrack.tracker.usage": "Right-click to locate a nearby %s.",
+  "item.iobtrack.tracker.radius": "Search radius: 64 blocks",
+  "item.iobtrack.tracker.not_found": "No %s found nearby!",
+  "item.iobtrack.tracker.found": "Nearest %s is %s blocks away at X:%s Y:%s Z:%s"
+}
