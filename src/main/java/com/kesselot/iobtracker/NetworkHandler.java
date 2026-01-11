@@ -1,5 +1,5 @@
 // src/main/java/com/asbestosstar/iobtracker/NetworkHandler.java
-package com.asbestosstar.iobtracker;
+package com.kesselot.iobtracker;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkRegistry;

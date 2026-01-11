@@ -1,9 +1,9 @@
-package com.asbestosstar.iobtracker.item;
+package com.kesselot.iobtracker.item;
 
 import java.util.UUID;
 
-import com.asbestosstar.iobtracker.DragonListPacket;
-import com.asbestosstar.iobtracker.NetworkHandler;
+import com.kesselot.iobtracker.DragonListPacket;
+import com.kesselot.iobtracker.NetworkHandler;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;

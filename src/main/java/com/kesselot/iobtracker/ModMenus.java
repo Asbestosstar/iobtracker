@@ -1,4 +1,4 @@
-package com.asbestosstar.iobtracker;
+package com.kesselot.iobtracker;
 
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;

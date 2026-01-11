@@ -1,8 +1,8 @@
-package com.asbestosstar.iobtracker.item;
+package com.kesselot.iobtracker.item;
 
 import javax.annotation.Nullable;
 
-import com.asbestosstar.iobtracker.ModItems;
+import com.kesselot.iobtracker.ModItems;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;

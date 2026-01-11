@@ -1,8 +1,8 @@
-package com.asbestosstar.iobtracker;
+package com.kesselot.iobtracker;
 
 import org.slf4j.Logger;
 
-import com.asbestosstar.iobtracker.item.TrackerProperties;
+import com.kesselot.iobtracker.item.TrackerProperties;
 import com.mojang.logging.LogUtils;
 
 import net.minecraftforge.common.MinecraftForge;
