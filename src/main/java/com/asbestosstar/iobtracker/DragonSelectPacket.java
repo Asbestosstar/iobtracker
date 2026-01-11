@@ -2,9 +2,20 @@ package com.asbestosstar.iobtracker;
 
 import java.util.UUID;
 
+import com.asbestosstar.iobtracker.item.DragonTrackerItem;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class DragonSelectPacket {
@@ -24,56 +35,59 @@ public class DragonSelectPacket {
 
 	public boolean handle(java.util.function.Supplier<net.minecraftforge.network.NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			net.minecraft.server.level.ServerPlayer player = ctx.get().getSender();
-			if (player == null)
+			ServerPlayer player = ctx.get().getSender();
+			if (player == null) {
 				return;
+			}
 
-			net.minecraft.world.entity.LivingEntity target = null;
+			LivingEntity target = null;
 			ServerLevel serverLevel = (ServerLevel) player.level;
 
-			for (net.minecraft.world.entity.Entity e : serverLevel.getAllEntities()) {
-			    if (e.getUUID().equals(dragonUUID) && e instanceof net.minecraft.world.entity.LivingEntity) {
-			        target = (net.minecraft.world.entity.LivingEntity) e;
-			        break;
-			    }
+			for (Entity e : serverLevel.getAllEntities()) {
+				if (e.getUUID().equals(dragonUUID) && e instanceof LivingEntity) {
+					target = (LivingEntity) e;
+					break;
+				}
 			}
 
 			if (target != null) {
 				// Consume gronckle_iron
 				boolean consumed = false;
-				net.minecraft.world.item.Item gronckleIron = com.GACMD.isleofberk.registery.ModItems.GRONCKLE_IRON
+				Item gronckleIron = com.GACMD.isleofberk.registery.ModItems.GRONCKLE_IRON
 						.get();
-				net.minecraft.world.entity.player.Inventory inv = player.getInventory();
+				Inventory inv = player.getInventory();
 
 				for (int i = 0; i < inv.items.size(); i++) {
-					net.minecraft.world.item.ItemStack stack = inv.items.get(i);
+					ItemStack stack = inv.items.get(i);
 					if (!stack.isEmpty() && stack.getItem() == gronckleIron) {
-						if (stack.getCount() > 1)
+						if (stack.getCount() > 1) {
 							stack.shrink(1);
-						else
-							inv.setItem(i, net.minecraft.world.item.ItemStack.EMPTY);
+						} else {
+							inv.setItem(i, ItemStack.EMPTY);
+						}
 						consumed = true;
 						break;
 					}
 				}
 
 				if (!consumed) {
-					net.minecraft.world.item.ItemStack offhand = inv.offhand.get(0);
+					ItemStack offhand = inv.offhand.get(0);
 					if (!offhand.isEmpty() && offhand.getItem() == gronckleIron) {
-						if (offhand.getCount() > 1)
+						if (offhand.getCount() > 1) {
 							offhand.shrink(1);
-						else
-							inv.offhand.set(0, net.minecraft.world.item.ItemStack.EMPTY);
+						} else {
+							inv.offhand.set(0, ItemStack.EMPTY);
+						}
 						consumed = true;
 					}
 				}
 
 				if (consumed) {
 					ItemStack tracker = player.getMainHandItem();
-					if (tracker.getItem() instanceof com.asbestosstar.iobtracker.item.DragonTrackerItem) {
+					if (tracker.getItem() instanceof DragonTrackerItem) {
 						CompoundTag tag = tracker.getOrCreateTag();
 
-						tag.put("TrackedDragonUUID", net.minecraft.nbt.NbtUtils.createUUID(target.getUUID()));
+						tag.put("TrackedDragonUUID", NbtUtils.createUUID(target.getUUID()));
 
 						tag.putString("TrackedDragonClass", target.getClass().getName());
 
@@ -83,21 +97,20 @@ public class DragonSelectPacket {
 						player.containerMenu.slots.get(36 + player.getInventory().selected).set(tracker);
 					}
 
-						serverLevel.sendParticles(net.minecraft.core.particles.ParticleTypes.ASH, target.getX(),
-								target.getY() + 1, target.getZ(), 20, 0.5, 0.5, 0.5, 0.1);
-					
+					serverLevel.sendParticles(ParticleTypes.ASH, target.getX(),
+							target.getY() + 1, target.getZ(), 20, 0.5, 0.5, 0.5, 0.1);
 
 					double dx = target.getX() - player.getX();
 					double dz = target.getZ() - player.getZ();
 					int distance = (int) Math.sqrt(dx * dx + dz * dz);
 
-					player.sendMessage(new net.minecraft.network.chat.TranslatableComponent(
+					player.sendMessage(new TranslatableComponent(
 							"item.iobtrack.tracker.found", target.getType().getDescription(), distance,
 							target.blockPosition().getX(), target.blockPosition().getY(), target.blockPosition().getZ())
-							.withStyle(net.minecraft.ChatFormatting.GREEN), net.minecraft.Util.NIL_UUID);
+							.withStyle(ChatFormatting.GREEN), net.minecraft.Util.NIL_UUID);
 				} else {
-					player.sendMessage(new net.minecraft.network.chat.TranslatableComponent(
-							"item.iobtrack.tracker.no_gronckle_iron").withStyle(net.minecraft.ChatFormatting.RED),
+					player.sendMessage(new TranslatableComponent(
+							"item.iobtrack.tracker.no_gronckle_iron").withStyle(ChatFormatting.RED),
 							net.minecraft.Util.NIL_UUID);
 				}
 			}

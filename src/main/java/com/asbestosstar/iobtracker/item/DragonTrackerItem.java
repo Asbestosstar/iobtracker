@@ -63,8 +63,9 @@ public class DragonTrackerItem extends Item {
 
 	@Override
 	public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
-		if (!(entity instanceof Player player))
+		if (!(entity instanceof Player player)) {
 			return;
+		}
 
 		CompoundTag tag = stack.getOrCreateTag();
 

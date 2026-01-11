@@ -5,8 +5,6 @@ import org.slf4j.Logger;
 import com.asbestosstar.iobtracker.item.TrackerProperties;
 import com.mojang.logging.LogUtils;
 
-import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -34,9 +32,5 @@ public class IOBTracker {
 		NetworkHandler.register();
 	}
 
-	@net.minecraftforge.eventbus.api.SubscribeEvent
-	public void onPlayerTick(net.minecraftforge.event.TickEvent.PlayerTickEvent event) {
-
-	}
 
 }

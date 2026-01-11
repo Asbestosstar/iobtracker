@@ -34,15 +34,13 @@ public class DragonTrackerMenu extends AbstractContainerMenu {
 	}
 
 	private void scanForDragons() {
-	    ServerLevel serverLevel = (ServerLevel) player.level;
+		ServerLevel serverLevel = (ServerLevel) player.level;
 
-	    for (Entity entity : serverLevel.getAllEntities()) {
-	        if (entity instanceof LivingEntity living &&
-	            isIOBDragon(living.getType()) &&
-	            living.isAlive()) {
-	            nearbyDragons.add(living);
-	        }
-	    }
+		for (Entity entity : serverLevel.getAllEntities()) {
+			if (entity instanceof LivingEntity living && isIOBDragon(living.getType()) && living.isAlive()) {
+				nearbyDragons.add(living);
+			}
+		}
 	}
 
 	private boolean isIOBDragon(EntityType<?> type) {
