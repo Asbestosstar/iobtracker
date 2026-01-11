@@ -1,8 +1,13 @@
 {
-  "item.iobtrack.night_fury_tracker": "Night Fury Tracker",
-  "dragon.night_fury": "Night Fury",
-  "item.iobtrack.tracker.usage": "Right-click to locate a nearby %s.",
-  "item.iobtrack.tracker.radius": "Search radius: 64 blocks",
+  "item.iobtrack.dragon_tracker": "Dragon Tracker",
+  "item.iobtrack.tracker.usage": "Right-click to open dragon tracker.",
+  "item.iobtrack.tracker.cooldown": "Cooldown: %s seconds remaining!",
+  "item.iobtrack.tracker.cooldown.tooltip": "Cooldown: %s seconds",
+  "item.iobtrack.tracker.no_gronckle_iron": "You need Gronckle Iron to track a dragon!",
+  "item.iobtrack.tracker.selected": "Tracking started!",
   "item.iobtrack.tracker.not_found": "No %s found nearby!",
-  "item.iobtrack.tracker.found": "Nearest %s is %s blocks away at X:%s Y:%s Z:%s"
+  "item.iobtrack.tracker.found": "Nearest %s is %s blocks away at X:%s Y:%s Z:%s",
+  "screen.iobtrack.tracker": "Dragon Tracker",
+  "gui.iobtrack.no_dragons": "No dragons found",
+  "gui.done": "Done"
 }
