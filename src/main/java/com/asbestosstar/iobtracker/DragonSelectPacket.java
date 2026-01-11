@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 
 public class DragonSelectPacket {
@@ -28,12 +29,13 @@ public class DragonSelectPacket {
 				return;
 
 			net.minecraft.world.entity.LivingEntity target = null;
-			for (net.minecraft.world.entity.Entity e : player.level.getEntitiesOfClass(
-					net.minecraft.world.entity.Entity.class, player.getBoundingBox().inflate(2000),
-					entity -> entity.getUUID().equals(dragonUUID)
-							&& entity instanceof net.minecraft.world.entity.LivingEntity)) {
-				target = (net.minecraft.world.entity.LivingEntity) e;
-				break;
+			ServerLevel serverLevel = (ServerLevel) player.level;
+
+			for (net.minecraft.world.entity.Entity e : serverLevel.getAllEntities()) {
+			    if (e.getUUID().equals(dragonUUID) && e instanceof net.minecraft.world.entity.LivingEntity) {
+			        target = (net.minecraft.world.entity.LivingEntity) e;
+			        break;
+			    }
 			}
 
 			if (target != null) {
@@ -81,10 +83,9 @@ public class DragonSelectPacket {
 						player.containerMenu.slots.get(36 + player.getInventory().selected).set(tracker);
 					}
 
-					if (player.level instanceof net.minecraft.server.level.ServerLevel serverLevel) {
 						serverLevel.sendParticles(net.minecraft.core.particles.ParticleTypes.ASH, target.getX(),
 								target.getY() + 1, target.getZ(), 20, 0.5, 0.5, 0.5, 0.1);
-					}
+					
 
 					double dx = target.getX() - player.getX();
 					double dz = target.getZ() - player.getZ();

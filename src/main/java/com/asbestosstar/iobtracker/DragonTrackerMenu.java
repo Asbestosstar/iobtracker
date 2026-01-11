@@ -1,16 +1,19 @@
 package com.asbestosstar.iobtracker;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.GACMD.isleofberk.registery.ModEntities;
+
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DragonTrackerMenu extends AbstractContainerMenu {
 	public final Player player; // may be null on client
@@ -31,8 +34,15 @@ public class DragonTrackerMenu extends AbstractContainerMenu {
 	}
 
 	private void scanForDragons() {
-		player.level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(2000)).stream()
-				.filter(e -> isIOBDragon(e.getType())).filter(LivingEntity::isAlive).forEach(nearbyDragons::add);
+	    ServerLevel serverLevel = (ServerLevel) player.level;
+
+	    for (Entity entity : serverLevel.getAllEntities()) {
+	        if (entity instanceof LivingEntity living &&
+	            isIOBDragon(living.getType()) &&
+	            living.isAlive()) {
+	            nearbyDragons.add(living);
+	        }
+	    }
 	}
 
 	private boolean isIOBDragon(EntityType<?> type) {

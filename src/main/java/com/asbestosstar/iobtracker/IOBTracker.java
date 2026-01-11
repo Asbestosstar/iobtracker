@@ -27,10 +27,7 @@ public class IOBTracker {
 	}
 
 	private void clientSetup(final FMLClientSetupEvent event) {
-		event.enqueueWork(() -> {
-			ItemProperties.register(ModItems.TRACKER.get(), new ResourceLocation("iobtrack", "angle"),
-					new TrackerProperties());
-		});
+		TrackerProperties.clientSetup(event);
 	}
 
 	private void setup(final FMLCommonSetupEvent event) {

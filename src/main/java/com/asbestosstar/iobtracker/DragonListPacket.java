@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import com.GACMD.isleofberk.registery.ModEntities;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -24,11 +25,17 @@ public class DragonListPacket {
 	public DragonListPacket(ServerPlayer player) {
 		this.uuids = new ArrayList<>();
 		this.names = new ArrayList<>();
+		
+		ServerLevel lvl = (ServerLevel) player.level;
+		List<LivingEntity> dragons = new ArrayList<>();
 
-		List<LivingEntity> dragons = player.level
-				.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(2000)).stream()
-				.filter(e -> isIOBDragon(e.getType()) && e.isAlive()).collect(Collectors.toList());
-
+		for (Entity e : lvl.getAllEntities()) {
+		    if (e instanceof LivingEntity living && isIOBDragon(living.getType()) && living.isAlive()) {
+		        dragons.add(living);
+		    }
+		}
+		
+		
 		// Sort by horizontal distance (XZ only)
 		dragons.sort((a, b) -> {
 			double distA = Math.sqrt(Math.pow(a.getX() - player.getX(), 2) + Math.pow(a.getZ() - player.getZ(), 2));
