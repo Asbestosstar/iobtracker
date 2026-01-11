@@ -1,5 +1,5 @@
 {
-  "item.iobtrack.dragon_tracker": "Dragon Tracker",
+  "item.iobtrack.tracker": "Dragon Tracker",
   "item.iobtrack.tracker.usage": "Right-click to open dragon tracker.",
   "item.iobtrack.tracker.cooldown": "Cooldown: %s seconds remaining!",
   "item.iobtrack.tracker.cooldown.tooltip": "Cooldown: %s seconds",
