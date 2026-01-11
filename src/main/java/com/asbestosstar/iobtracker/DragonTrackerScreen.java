@@ -20,50 +20,53 @@ public class DragonTrackerScreen extends Screen {
 
 	@Override
 	protected void init() {
-		int y = 30;
-		for (int i = 0; i < dragonNames.size() && y < this.height - 40; i++) {
+		int buttonWidth = 120;
+		int buttonHeight = 20;
+		int spacingX = 10;
+		int spacingY = 25;
+		int cols = 3;
+		int rows = 2;
+		int totalSlots = cols * rows; // max 6
+
+		// Center the grid horizontally
+		int totalWidth = (buttonWidth + spacingX) * cols - spacingX;
+		int startX = (this.width - totalWidth) / 2;
+		int startY = 40; // top margin
+
+		int added = 0;
+		for (int i = 0; i < dragonNames.size() && added < totalSlots; i++) {
 			final String name = dragonNames.get(i);
 			final UUID uuid = dragonUUIDs.get(i);
 
-			Button button = new Button(this.width / 2 - 75, y, 150, 20, new TextComponent(name), new Button.OnPress() {
-				@Override
-				public void onPress(Button btn) {
-					System.out.println("[IOBTRACKER] BUTTON PRESSED! Selecting: " + name + " (UUID: " + uuid + ")");
-					onSelect(uuid);
-				}
+			int col = added % cols;
+			int row = added / cols;
+
+			int x = startX + col * (buttonWidth + spacingX);
+			int y = startY + row * (buttonHeight + spacingY);
+
+			Button button = new Button(x, y, buttonWidth, buttonHeight, new TextComponent(name), btn -> {
+				System.out.println("[IOBTRACKER] BUTTON PRESSED! Selecting: " + name + " (UUID: " + uuid + ")");
+				onSelect(uuid);
 			});
 
-			this.renderables.add(button);
-			List list = this.children();
-			list.add(button);
-			y += 25;
+			this.addRenderableWidget(button);
+			added++;
 		}
 
+		// If no dragons found
 		if (dragonNames.isEmpty()) {
-			Button closeBtn = new Button(this.width / 2 - 75, 30, 150, 20,
-					new TranslatableComponent("gui.iobtrack.no_dragons"), new Button.OnPress() {
-						@Override
-						public void onPress(Button btn) {
-							onClose();
-						}
-					});
-			this.renderables.add(closeBtn);
-			List list = this.children();
-			list.add(closeBtn);
+			Button closeBtn = new Button(this.width / 2 - 75, 40, 150, 20,
+					new TranslatableComponent("gui.iobtrack.no_dragons"), btn -> onClose());
+			this.addRenderableWidget(closeBtn);
 		}
 
+		// Done button at bottom
 		Button doneBtn = new Button(this.width / 2 - 40, this.height - 30, 80, 20,
-				new TranslatableComponent("gui.done"), new Button.OnPress() {
-					@Override
-					public void onPress(Button btn) {
-						System.out.println("[IOBTRACKER] Done button pressed");
-						onClose();
-					}
+				new TranslatableComponent("gui.done"), btn -> {
+					System.out.println("[IOBTRACKER] Done button pressed");
+					onClose();
 				});
-		this.renderables.add(doneBtn);
-		List list = this.children();
-		list.add(doneBtn);
-
+		this.addRenderableWidget(doneBtn);
 	}
 
 	private void onSelect(UUID uuid) {

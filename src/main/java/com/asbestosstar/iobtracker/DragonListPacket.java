@@ -1,18 +1,17 @@
 package com.asbestosstar.iobtracker;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.function.Supplier;
-
-import com.GACMD.isleofberk.registery.ModEntities;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -25,32 +24,33 @@ public class DragonListPacket {
 	public DragonListPacket(ServerPlayer player) {
 		this.uuids = new ArrayList<>();
 		this.names = new ArrayList<>();
-		
+
 		ServerLevel lvl = (ServerLevel) player.level;
 		List<LivingEntity> dragons = new ArrayList<>();
 
+		// Collect ALL loaded IOB dragons in the world
 		for (Entity e : lvl.getAllEntities()) {
-		    if (e instanceof LivingEntity living && isIOBDragon(living.getType()) && living.isAlive()) {
-		        dragons.add(living);
-		    }
+			if (e instanceof LivingEntity living && isIOBDragon(living) && living.isAlive()) {
+				dragons.add(living);
+			}
 		}
-		
-		
-		// Sort by horizontal distance (XZ only)
-		dragons.sort((a, b) -> {
-			double distA = Math.sqrt(Math.pow(a.getX() - player.getX(), 2) + Math.pow(a.getZ() - player.getZ(), 2));
-			double distB = Math.sqrt(Math.pow(b.getX() - player.getX(), 2) + Math.pow(b.getZ() - player.getZ(), 2));
-			return Double.compare(distA, distB);
-		});
 
-		// Add to lists in sorted order
-		for (LivingEntity e : dragons) {
-			double dx = e.getX() - player.getX();
-			double dz = e.getZ() - player.getZ();
-			int dist = (int) Math.sqrt(dx * dx + dz * dz);
+		// If no dragons, nothing to do
+		if (dragons.isEmpty()) {
+			return;
+		}
+
+		// Shuffle using world time as seed for consistency per tick
+		Random random = new Random(player.getLevel().getGameTime());
+		Collections.shuffle(dragons, random);
+
+		// Take up to 6
+		int count = Math.min(dragons.size(), 6);
+		for (int i = 0; i < count; i++) {
+			LivingEntity e = dragons.get(i);
 
 			String baseName = e.getType().getDescription().getString();
-			String displayName = baseName + " (" + dist + " blocks)";
+			String displayName = baseName;
 
 			uuids.add(e.getUUID());
 			names.add(displayName);
@@ -89,12 +89,18 @@ public class DragonListPacket {
 		Minecraft.getInstance().setScreen(new DragonTrackerScreen(uuids, names));
 	}
 
-	private static boolean isIOBDragon(EntityType<?> type) {
-		return type == ModEntities.NIGHT_FURY.get() || type == ModEntities.LIGHT_FURY.get()
-				|| type == ModEntities.NIGHT_LIGHT.get() || type == ModEntities.TRIPLE_STRYKE.get()
-				|| type == ModEntities.SKRILL.get() || type == ModEntities.DEADLY_NADDER.get()
-				|| type == ModEntities.GRONCKLE.get() || type == ModEntities.MONSTROUS_NIGHTMARE.get()
-				|| type == ModEntities.ZIPPLEBACK.get() || type == ModEntities.TERRIBLE_TERROR.get()
-				|| type == ModEntities.SPEED_STINGER.get() || type == ModEntities.SPEED_STINGER_LEADER.get();
+	private static boolean isIOBDragon(Entity entity) {
+		return entity instanceof com.GACMD.isleofberk.entity.dragons.nightfury.NightFury
+				|| entity instanceof com.GACMD.isleofberk.entity.dragons.lightfury.LightFury
+				|| entity instanceof com.GACMD.isleofberk.entity.dragons.nightlight.NightLight
+				|| entity instanceof com.GACMD.isleofberk.entity.dragons.triple_stryke.TripleStryke
+				|| entity instanceof com.GACMD.isleofberk.entity.dragons.skrill.Skrill
+				|| entity instanceof com.GACMD.isleofberk.entity.dragons.deadlynadder.DeadlyNadder
+				|| entity instanceof com.GACMD.isleofberk.entity.dragons.gronckle.Gronckle
+				|| entity instanceof com.GACMD.isleofberk.entity.dragons.montrous_nightmare.MonstrousNightmare
+				|| entity instanceof com.GACMD.isleofberk.entity.dragons.zippleback.ZippleBack
+				|| entity instanceof com.GACMD.isleofberk.entity.dragons.terrible_terror.TerribleTerror
+				|| entity instanceof com.GACMD.isleofberk.entity.dragons.speedstinger.SpeedStinger
+				|| entity instanceof com.GACMD.isleofberk.entity.dragons.speedstingerleader.SpeedStingerLeader;
 	}
 }
