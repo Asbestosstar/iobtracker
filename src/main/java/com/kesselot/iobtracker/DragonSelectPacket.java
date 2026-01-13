@@ -53,8 +53,7 @@ public class DragonSelectPacket {
 			if (target != null) {
 				// Consume gronckle_iron
 				boolean consumed = false;
-				Item gronckleIron = com.GACMD.isleofberk.registery.ModItems.GRONCKLE_IRON
-						.get();
+				Item gronckleIron = com.GACMD.isleofberk.registery.ModItems.GRONCKLE_IRON.get();
 				Inventory inv = player.getInventory();
 
 				for (int i = 0; i < inv.items.size(); i++) {
@@ -91,27 +90,25 @@ public class DragonSelectPacket {
 
 						tag.putString("TrackedDragonClass", target.getClass().getName());
 
-						tag.putInt("Cooldown", 1200);
-
 						// Sync to client
 						player.containerMenu.slots.get(36 + player.getInventory().selected).set(tracker);
 					}
 
-					serverLevel.sendParticles(ParticleTypes.ASH, target.getX(),
-							target.getY() + 1, target.getZ(), 20, 0.5, 0.5, 0.5, 0.1);
+					serverLevel.sendParticles(ParticleTypes.ASH, target.getX(), target.getY() + 1, target.getZ(), 20,
+							0.5, 0.5, 0.5, 0.1);
 
 					double dx = target.getX() - player.getX();
 					double dz = target.getZ() - player.getZ();
 					int distance = (int) Math.sqrt(dx * dx + dz * dz);
 
-					player.sendMessage(new TranslatableComponent(
-							"item.iobtrack.tracker.found", target.getType().getDescription(), distance,
-							target.blockPosition().getX(), target.blockPosition().getY(), target.blockPosition().getZ())
-							.withStyle(ChatFormatting.GREEN), net.minecraft.Util.NIL_UUID);
-				} else {
-					player.sendMessage(new TranslatableComponent(
-							"item.iobtrack.tracker.no_gronckle_iron").withStyle(ChatFormatting.RED),
+					player.sendMessage(
+							new TranslatableComponent("item.iobtrack.tracker.found", target.getType().getDescription(),
+									distance, target.blockPosition().getX(), target.blockPosition().getY(),
+									target.blockPosition().getZ()).withStyle(ChatFormatting.GREEN),
 							net.minecraft.Util.NIL_UUID);
+				} else {
+					player.sendMessage(new TranslatableComponent("item.iobtrack.tracker.no_gronckle_iron")
+							.withStyle(ChatFormatting.RED), net.minecraft.Util.NIL_UUID);
 				}
 			}
 		});

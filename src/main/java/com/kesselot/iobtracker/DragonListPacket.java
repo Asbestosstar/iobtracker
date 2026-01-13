@@ -7,11 +7,11 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -25,18 +25,11 @@ public class DragonListPacket {
 		this.uuids = new ArrayList<>();
 		this.names = new ArrayList<>();
 
-		ServerLevel lvl = (ServerLevel) player.level;
-		List<LivingEntity> dragons = new ArrayList<>();
-
-		// Collect ALL loaded IOB dragons in the world
-		for (Entity e : lvl.getAllEntities()) {
-			if (e instanceof LivingEntity living && isIOBDragon(living) && living.isAlive()) {
-				dragons.add(living);
-			}
-		}
+		List<LivingEntity> dragons = IOBTracker.getDragonsNearPlayer(player);
 
 		// If no dragons, nothing to do
 		if (dragons.isEmpty()) {
+			player.sendMessage(new TranslatableComponent("item.iobtrack.tracker.none"), Util.NIL_UUID);
 			return;
 		}
 
@@ -89,18 +82,4 @@ public class DragonListPacket {
 		Minecraft.getInstance().setScreen(new DragonTrackerScreen(uuids, names));
 	}
 
-	private static boolean isIOBDragon(Entity entity) {
-		return entity instanceof com.GACMD.isleofberk.entity.dragons.nightfury.NightFury
-				|| entity instanceof com.GACMD.isleofberk.entity.dragons.lightfury.LightFury
-				|| entity instanceof com.GACMD.isleofberk.entity.dragons.nightlight.NightLight
-				|| entity instanceof com.GACMD.isleofberk.entity.dragons.triple_stryke.TripleStryke
-				|| entity instanceof com.GACMD.isleofberk.entity.dragons.skrill.Skrill
-				|| entity instanceof com.GACMD.isleofberk.entity.dragons.deadlynadder.DeadlyNadder
-				|| entity instanceof com.GACMD.isleofberk.entity.dragons.gronckle.Gronckle
-				|| entity instanceof com.GACMD.isleofberk.entity.dragons.montrous_nightmare.MonstrousNightmare
-				|| entity instanceof com.GACMD.isleofberk.entity.dragons.zippleback.ZippleBack
-				|| entity instanceof com.GACMD.isleofberk.entity.dragons.terrible_terror.TerribleTerror
-				|| entity instanceof com.GACMD.isleofberk.entity.dragons.speedstinger.SpeedStinger
-				|| entity instanceof com.GACMD.isleofberk.entity.dragons.speedstingerleader.SpeedStingerLeader;
-	}
 }

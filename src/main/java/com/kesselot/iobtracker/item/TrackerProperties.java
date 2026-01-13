@@ -24,14 +24,12 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class TrackerProperties implements ClampedItemPropertyFunction {
 
-
 	public static void clientSetup(final FMLClientSetupEvent event) {
 		event.enqueueWork(() -> {
 			ItemProperties.register(ModItems.TRACKER.get(), new ResourceLocation("iobtrack", "angle"),
 					new TrackerProperties());
 		});
 	}
-
 
 	private final Wobble wobble = new Wobble();
 	private final Wobble wobbleRandom = new Wobble();
@@ -49,8 +47,8 @@ public class TrackerProperties implements ClampedItemPropertyFunction {
 
 			BlockPos blockpos = position(p_174672_, p_174673_, p_174674_, p_174675_);
 			long i = p_174673_.getGameTime();
-			if (blockpos != null && !(entity.position().distanceToSqr(blockpos.getX() + 0.5D,
-					entity.position().y(), blockpos.getZ() + 0.5D) < 1.0E-5F)) {
+			if (blockpos != null && !(entity.position().distanceToSqr(blockpos.getX() + 0.5D, entity.position().y(),
+					blockpos.getZ() + 0.5D) < 1.0E-5F)) {
 				boolean flag = p_174674_ instanceof Player && ((Player) p_174674_).isLocalPlayer();
 				double d1 = 0.0D;
 				if (flag) {

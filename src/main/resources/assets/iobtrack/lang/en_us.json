@@ -5,6 +5,7 @@
   "item.iobtrack.tracker.cooldown.tooltip": "Cooldown: %s seconds",
   "item.iobtrack.tracker.no_gronckle_iron": "You need Gronckle Iron to track a dragon!",
   "item.iobtrack.tracker.selected": "Tracking started!",
+  "item.iobtrack.tracker.none": "No Dragons Found",
   "item.iobtrack.tracker.not_found": "No %s found nearby!",
   "item.iobtrack.tracker.found": "Nearest %s is %s blocks away at X:%s Y:%s Z:%s",
   "screen.iobtrack.tracker": "Dragon Tracker",
